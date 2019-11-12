@@ -1,4 +1,4 @@
 package com.example.tescotomonzo;
 
-public class TescoLoginActivity {
+public class Account {
 }

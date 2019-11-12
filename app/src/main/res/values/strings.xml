@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">TescoToMonzo</string>
+    <string name="login_monzo">Login Monzo</string>
+    <string name="login_tesco">Login Tesco</string>
 </resources>
