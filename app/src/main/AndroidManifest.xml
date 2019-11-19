@@ -18,6 +18,20 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+        <activity android:name=".MonzoLoginActivity" />
+        <activity
+            android:name=".MonzoRedirectActivity"
+            android:launchMode="singleTop"
+            android:noHistory="true"
+            android:screenOrientation="behind"
+            android:theme="@style/AppTheme"
+            android:exported="true" >
+            <intent-filter>
+                <data android:scheme="https" android:host="tescotomonzo.example.com"/>
+                <action android:name="android.intent.action.VIEW" />
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+            </intent-filter>
+        </activity>
 </application>
-
         </manifest>

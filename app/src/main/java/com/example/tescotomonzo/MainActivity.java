@@ -3,6 +3,7 @@ package com.example.tescotomonzo;
 import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tescoLogin.setOnClickListener(this);
         monzoLogin.setOnClickListener(this);
 
+
         checkForInternetPermission();
 
 
@@ -35,7 +37,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View v) {
         switch(v.getId()) {
             case R.id.monzo_login:
-                OAuth.createService();
+                startActivity(new Intent(this, MonzoLoginActivity.class));
                 break;
             case R.id.tesco_login:
                 break;
