@@ -29,8 +29,7 @@ public class MonzoAccessToken {
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest postRequest = new StringRequest(Request.Method.POST, monzo_token_url,
                 response -> {
-                    Log.d("Response", response);
-                    StringUtils.substringBetween(response,"access_token:\"","\"");
+                    access_token = StringUtils.substringBetween(response, "access_token\":\"", "\"");
                     Toast.makeText(context, "Access token activated", Toast.LENGTH_SHORT).show();
                 },
                 error -> {
