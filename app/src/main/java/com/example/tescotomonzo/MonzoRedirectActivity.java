@@ -9,7 +9,7 @@ public class MonzoRedirectActivity extends AppCompatActivity {
 
     private String code;
     private String state;
-    private MonzoAccessToken monzoAccessToken = new MonzoAccessToken();
+    private MonzoAPI monzoAPI = new MonzoAPI();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,7 +23,9 @@ public class MonzoRedirectActivity extends AppCompatActivity {
 
         //TODO check state
         if (code != null) {
-            monzoAccessToken.requestAccessToken(code, this);
+            AccessToken accessToken = new AccessToken();
+            accessToken.setCode(code);
+            monzoAPI.requestAccessToken(code, this);
         }
     }
 }

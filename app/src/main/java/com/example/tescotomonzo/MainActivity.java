@@ -22,6 +22,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         tescoLogin.setOnClickListener(this);
         monzoLogin.setOnClickListener(this);
         permissions.checkForInternetPermission(this, this);
+        startService(new Intent(this,NotificationListener.class));
     }
 
     @Override
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 permissions.checkForSmsPermission(this,this);
                 permissions.checkForBroadcastPermission(this,this);
                 break;
-        }:w
+        }
     }
 
 }
