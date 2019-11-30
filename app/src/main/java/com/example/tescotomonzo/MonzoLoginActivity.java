@@ -3,22 +3,20 @@ package com.example.tescotomonzo;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import androidx.appcompat.app.AppCompatActivity;
 
 import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import androidx.appcompat.app.AppCompatActivity;
-
-import static com.example.tescotomonzo.Config.CLIENT_ID;
-import static com.example.tescotomonzo.Config.REDIRECT_MONZO;
-import static com.example.tescotomonzo.Config.REDIRECT_URI;
+import static com.example.tescotomonzo.AuthConfig.CLIENT_ID;
+import static com.example.tescotomonzo.AuthConfig.REDIRECT_URI;
+import static com.example.tescotomonzo.GeneralConfig.REDIRECT_MONZO;
 
 public class MonzoLoginActivity extends AppCompatActivity {
 
-    ParameterStringBuilder parameterStringBuilder = new ParameterStringBuilder();
-    Map<String, String> params = new LinkedHashMap<>();
-    String redirect_monzo = REDIRECT_MONZO;
+    private Map<String, String> params = new LinkedHashMap<>();
+    private String redirect_monzo = REDIRECT_MONZO;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -30,7 +28,7 @@ public class MonzoLoginActivity extends AppCompatActivity {
         //sort this state situation out
         params.put("state", "rasdaosijfoihliuhkuhbku");
         try {
-            redirect_monzo += parameterStringBuilder.getParamsString(params);
+            redirect_monzo += ParameterStringBuilder.getParamsString(params);
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }

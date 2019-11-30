@@ -3,38 +3,32 @@ package com.example.tescotomonzo;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
-
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.example.tescotomonzo.Config.ACCESS_TOKEN_URL;
-import static com.example.tescotomonzo.Config.CLIENT_ID;
-import static com.example.tescotomonzo.Config.CLIENT_SECRET;
-import static com.example.tescotomonzo.Config.LIST_POTS_URL;
-import static com.example.tescotomonzo.Config.REDIRECT_URI;
-import static com.example.tescotomonzo.Config.WHO_AM_I;
+import static com.example.tescotomonzo.AuthConfig.*;
+import static com.example.tescotomonzo.GeneralConfig.*;
 
 public class MonzoAPI {
 
     private String monzo_token_url = ACCESS_TOKEN_URL;
     private String token;
-    AccessToken accessToken = new AccessToken();
+    private Access access = new Access();
 
-    public void requestAccessToken(String code, Context context) {
-
+    public void requestAccessToken(Context context) {
+        String code = access.getCode(context);
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest postRequest = new StringRequest(Request.Method.POST, monzo_token_url,
                 requestAccess -> {
                     token = StringUtils.substringBetween(requestAccess, "access_token\":\"", "\"");
-                    accessToken.setAccessToken(token);
+                    access.setAccessToken(token);
                     Toast.makeText(context, "Access token activated", Toast.LENGTH_SHORT).show();
                 },
                 error -> {
@@ -55,12 +49,11 @@ public class MonzoAPI {
             }
         };
         queue.add(postRequest);
-
     }
 
     public void checkAccessToken(Context context) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        String token = accessToken.getAccessToken();
+        String token = access.getAccessToken();
         StringRequest request = new StringRequest(Request.Method.POST, WHO_AM_I, checkAccess -> {
             Log.d("CHECKACCESS", checkAccess);
         },
@@ -77,7 +70,6 @@ public class MonzoAPI {
     }
 
     public void listPots(Context context) {
-        AccessToken accessToken = new AccessToken();
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest request = new StringRequest(Request.Method.POST, LIST_POTS_URL, listPots ->
                 Log.e("List pots", listPots),
@@ -86,7 +78,7 @@ public class MonzoAPI {
             public Map<String, String> getHeaders() {
                 Map<String, String> params = new HashMap<>();
                 params.put("Content-Type", "application/json; charset=UTF-8");
-                params.put("Authorisation", accessToken.getAccessToken());
+                params.put("Authorisation", access.getAccessToken());
                 return params;
             }
         };

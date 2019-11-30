@@ -23,9 +23,8 @@ public class MonzoRedirectActivity extends AppCompatActivity {
 
         //TODO check state
         if (code != null) {
-            AccessToken accessToken = new AccessToken();
-            accessToken.setCode(code);
-            monzoAPI.requestAccessToken(code, this);
+            Access access = new Access();
+            access.setCode(this, code);
         }
     }
 }
