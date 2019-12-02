@@ -11,6 +11,7 @@ public class Access implements Serializable {
     private String accessToken;
     private static final String STORAGE = "AuthData";
     private static final String ACCESS_CODE = "access_code";
+    private static final String ACCESS_TOKEN = "access_token";
 
     public String getCode(Context context){
         SharedPreferences sharedPref = context.getSharedPreferences(STORAGE, Context.MODE_PRIVATE);
@@ -24,12 +25,16 @@ public class Access implements Serializable {
         editor.apply();
     }
 
-    public void setAccessToken(String accessToken){
-        this.accessToken = accessToken;
+    public void setAccessToken(Context context, String accessToken){
+        SharedPreferences sharedPref = context.getSharedPreferences(STORAGE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(ACCESS_TOKEN, accessToken);
+        editor.apply();
     }
 
-    public String getAccessToken(){
-        return this.accessToken;
+    public String getAccessToken(Context context){
+        SharedPreferences sharedPref = context.getSharedPreferences(STORAGE, Context.MODE_PRIVATE);
+        return sharedPref.getString(ACCESS_TOKEN, null);
     }
 
 }

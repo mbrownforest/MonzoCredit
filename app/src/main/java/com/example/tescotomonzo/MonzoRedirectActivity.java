@@ -25,6 +25,7 @@ public class MonzoRedirectActivity extends AppCompatActivity {
         if (code != null) {
             Access access = new Access();
             access.setCode(this, code);
+            monzoAPI.requestAccessToken(this);
         }
     }
 }

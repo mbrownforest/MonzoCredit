@@ -3,10 +3,12 @@ package com.example.tescotomonzo;
 import android.content.Context;
 import android.util.Log;
 import android.widget.Toast;
+
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.HashMap;
@@ -28,7 +30,7 @@ public class MonzoAPI {
         StringRequest postRequest = new StringRequest(Request.Method.POST, monzo_token_url,
                 requestAccess -> {
                     token = StringUtils.substringBetween(requestAccess, "access_token\":\"", "\"");
-                    access.setAccessToken(token);
+                    access.setAccessToken(context, token);
                     Toast.makeText(context, "Access token activated", Toast.LENGTH_SHORT).show();
                 },
                 error -> {
@@ -53,9 +55,14 @@ public class MonzoAPI {
 
     public void checkAccessToken(Context context) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        String token = access.getAccessToken();
+        String token = access.getAccessToken(context);
         StringRequest request = new StringRequest(Request.Method.POST, WHO_AM_I, checkAccess -> {
             Log.d("CHECKACCESS", checkAccess);
+            if(checkAccess != null){
+                listPots(context);
+            } else {
+                requestAccessToken(context);
+            }
         },
                 error -> Log.e("error is ", "" + error)) {
             @Override
@@ -70,6 +77,7 @@ public class MonzoAPI {
     }
 
     public void listPots(Context context) {
+        String token = access.getAccessToken(context);
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest request = new StringRequest(Request.Method.POST, LIST_POTS_URL, listPots ->
                 Log.e("List pots", listPots),
@@ -78,7 +86,7 @@ public class MonzoAPI {
             public Map<String, String> getHeaders() {
                 Map<String, String> params = new HashMap<>();
                 params.put("Content-Type", "application/json; charset=UTF-8");
-                params.put("Authorisation", access.getAccessToken());
+                params.put("Authorisation", token);
                 return params;
             }
         };
