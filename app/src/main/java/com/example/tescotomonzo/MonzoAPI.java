@@ -66,7 +66,9 @@ public class MonzoAPI {
                 String authentication = StringUtils.substringBetween(checkAccess, ":", ",");
                 if (authentication.equals("true")) {
                     listPots(context, token);
-                }}},
+                }
+            }
+        },
                 error -> Log.e("error is ", "" + error)) {
             @Override
             public Map<String, String> getHeaders() {
@@ -79,6 +81,7 @@ public class MonzoAPI {
     }
 
     private void listPots(Context context, String token) {
+
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest potsRequest = new StringRequest(Request.Method.GET, LIST_POTS_URL, listPots ->
                 listPots.length(),
@@ -93,6 +96,5 @@ public class MonzoAPI {
         queue.add(potsRequest);
 
     }
-
 
 }
