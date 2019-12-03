@@ -15,19 +15,22 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import static com.example.tescotomonzo.AuthConfig.*;
-import static com.example.tescotomonzo.GeneralConfig.*;
+import static com.example.tescotomonzo.AuthConfig.CLIENT_ID;
+import static com.example.tescotomonzo.AuthConfig.CLIENT_SECRET;
+import static com.example.tescotomonzo.AuthConfig.REDIRECT_URI;
+import static com.example.tescotomonzo.GeneralConfig.ACCESS_TOKEN_URL;
+import static com.example.tescotomonzo.GeneralConfig.LIST_POTS_URL;
+import static com.example.tescotomonzo.GeneralConfig.WHO_AM_I;
 
 public class MonzoAPI {
 
-    private String monzo_token_url = ACCESS_TOKEN_URL;
     private String token;
     private Access access = new Access();
 
-    public void requestAccessToken(Context context) {
+    public void requestAccessToken(Context context, Boolean moneyMoves) {
         String code = access.getCode(context);
         RequestQueue queue = Volley.newRequestQueue(context);
-        StringRequest postRequest = new StringRequest(Request.Method.POST, monzo_token_url,
+        StringRequest postRequest = new StringRequest(Request.Method.POST, ACCESS_TOKEN_URL,
                 requestAccess -> {
                     token = StringUtils.substringBetween(requestAccess, "access_token\":\"", "\"");
                     access.setAccessToken(context, token);
@@ -56,41 +59,38 @@ public class MonzoAPI {
     public void checkAccessToken(Context context) {
         RequestQueue queue = Volley.newRequestQueue(context);
         String token = access.getAccessToken(context);
-        StringRequest request = new StringRequest(Request.Method.POST, WHO_AM_I, checkAccess -> {
-            Log.d("CHECKACCESS", checkAccess);
-            if(checkAccess != null){
-                listPots(context);
+        StringRequest checkRequest = new StringRequest(Request.Method.GET, WHO_AM_I, checkAccess -> {
+            if (checkAccess.length() < 100) {
+                requestAccessToken(context, true);
             } else {
-                requestAccessToken(context);
-            }
-        },
+                String authentication = StringUtils.substringBetween(checkAccess, ":", ",");
+                if (authentication.equals("true")) {
+                    listPots(context, token);
+                }}},
                 error -> Log.e("error is ", "" + error)) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("Content-Type", "application/json; charset=UTF-8");
-                params.put("Authorisation", token);
-                return params;
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
-        queue.add(request);
+        queue.add(checkRequest);
     }
 
-    public void listPots(Context context) {
-        String token = access.getAccessToken(context);
+    private void listPots(Context context, String token) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        StringRequest request = new StringRequest(Request.Method.POST, LIST_POTS_URL, listPots ->
-                Log.e("List pots", listPots),
+        StringRequest potsRequest = new StringRequest(Request.Method.GET, LIST_POTS_URL, listPots ->
+                listPots.length(),
                 error -> Log.e("error is ", "" + error)) {
             @Override
             public Map<String, String> getHeaders() {
-                Map<String, String> params = new HashMap<>();
-                params.put("Content-Type", "application/json; charset=UTF-8");
-                params.put("Authorisation", token);
-                return params;
+                Map<String, String> headers = new HashMap<>();
+                headers.put("Authorization", "Bearer " + token);
+                return headers;
             }
         };
-        queue.add(request);
+        queue.add(potsRequest);
 
     }
 
