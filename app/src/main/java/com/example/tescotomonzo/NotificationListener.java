@@ -22,7 +22,7 @@ public class NotificationListener extends NotificationListenerService {
         if (amexCheck.equals(amexString)) {
             Toast.makeText(this, "AMEX balance updating", Toast.LENGTH_LONG).show();
             Float amexBalance = Float.valueOf(StringUtils.substringBetween(amexWeekly, "£"," "));
-            Balances balances = new Balances();
+            AmexBalance balances = new AmexBalance();
             balances.setAmexBalance(this, amexBalance);
             monzoAPI.checkAccessToken(this);
         }

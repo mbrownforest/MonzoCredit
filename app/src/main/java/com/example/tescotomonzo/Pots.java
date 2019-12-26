@@ -8,10 +8,10 @@ public class Pots {
     public String id;
 
     @JsonProperty("name")
-    public String name;
+    String name;
 
     @JsonProperty("balance")
-    public Integer balance;
+    Integer balance;
 
     @JsonProperty("style")
     public String style;

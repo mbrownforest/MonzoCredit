@@ -7,9 +7,8 @@ import java.io.Serializable;
 
 import static android.Manifest.permission_group.STORAGE;
 
-public class Balances implements Serializable {
+public class AmexBalance implements Serializable {
 
-    private String amexBalance;
     private static final String AMEX_BALANCE = "amex_balance";
 
     public Float getAmexBalance(Context context) {

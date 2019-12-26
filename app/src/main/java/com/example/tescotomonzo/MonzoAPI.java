@@ -34,9 +34,11 @@ import static com.example.tescotomonzo.GeneralConfig.WHO_AM_I;
 
 public class MonzoAPI {
 
+    //https://stackoverflow.com/questions/28172496/android-volley-how-to-isolate-requests-in-another-class/30604191
+
     private String token;
     private Access access = new Access();
-    private Balances balances = new Balances();
+    private AmexBalance balances = new AmexBalance();
     private List<Pots> potsArray = new ArrayList<>();
     private List<Account> accountsArray = new ArrayList<>();
     private ObjectMapper mapper = new ObjectMapper();
@@ -48,7 +50,7 @@ public class MonzoAPI {
                 requestAccess -> {
                     token = StringUtils.substringBetween(requestAccess, "access_token\":\"", "\"");
                     access.setAccessToken(context, token);
-                    Toast.makeText(context, "Access token activated", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(context, "Open your app to approve Monzo access", Toast.LENGTH_SHORT).show();
                 },
                 error -> {
                     Log.d("Error.Response", error.toString());
@@ -99,7 +101,7 @@ public class MonzoAPI {
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest potsRequest = new StringRequest(Request.Method.GET, LIST_POTS_URL,
                 pots -> mapPots(pots, context),
-                error -> Log.e("error is ", "" + error)) {
+                Throwable::printStackTrace) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
@@ -115,7 +117,7 @@ public class MonzoAPI {
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest accountsRequest = new StringRequest(Request.Method.GET, ACCOUNT_URL,
                 account -> mapAccounts(account, context),
-                error -> Log.e("error is ", "" + error)) {
+                Throwable::printStackTrace) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
@@ -129,32 +131,32 @@ public class MonzoAPI {
 
     private void listBalance(Context context, String id) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        StringRequest balanceRequest = new StringRequest(Request.Method.POST, BALANCE_URL,
+        String balanceUrl = BALANCE_URL + "account_id=" + id;
+        StringRequest balanceRequest = new StringRequest(Request.Method.GET, balanceUrl,
                 balance -> mapBalance(balance, context),
-                error -> Log.e("error is ", "" + error)) {
+                Throwable::printStackTrace) {
             @Override
             public Map<String, String> getHeaders() {
                 Map<String, String> headers = new HashMap<>();
                 headers.put("Authorization", "Bearer " + token);
                 return headers;
             }
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new LinkedHashMap<>();
-                params.put("account_id=", id);
-                return params;
-            }
         };
         queue.add(balanceRequest);
-
     }
 
-    private void mapBalance(String balance, Context context) {
-        Log.d("map","balanc");
+    private void mapBalance(String balanceAmount, Context context) {
+        try {
+            JSONObject jsonObj = new JSONObject(balanceAmount);
+            Balance balance = mapper.readValue(StringUtils.substringBefore(jsonObj.toString(), ",\"balance_i") + "}", Balance.class);
+
+        } catch (IOException | JSONException e) {
+            e.printStackTrace();
+        }
+
     }
 
     private void mapAccounts(String account, Context context) {
-
         try {
             JSONObject jsonObj = new JSONObject(account);
             JSONArray jab_data = jsonObj.getJSONArray("accounts");
@@ -167,7 +169,7 @@ public class MonzoAPI {
             if (!accountsArray.isEmpty()) {
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                     Account userAccount = accountsArray.stream().filter(user -> user.type.equals("uk_retail")).findFirst().orElse(null);
-                    if(userAccount != null){
+                    if (userAccount != null) {
                         listBalance(context, userAccount.id);
                     }
                 }
