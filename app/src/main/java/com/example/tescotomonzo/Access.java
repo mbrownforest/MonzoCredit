@@ -10,6 +10,8 @@ public class Access implements Serializable {
     private static final String STORAGE = "AuthData";
     private static final String ACCESS_CODE = "access_code";
     private static final String ACCESS_TOKEN = "access_token";
+    private static final String ACCESS_STATE = "access_state";
+    private static final String REFRESH_TOKEN = "refresh_token";
 
     public String getCode(Context context) {
         SharedPreferences sharedPref = context.getSharedPreferences(STORAGE, Context.MODE_PRIVATE);
@@ -20,6 +22,18 @@ public class Access implements Serializable {
         SharedPreferences sharedPref = context.getSharedPreferences(STORAGE, Context.MODE_PRIVATE);
         SharedPreferences.Editor editor = sharedPref.edit();
         editor.putString(ACCESS_CODE, code);
+        editor.apply();
+    }
+
+    public String getState(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(STORAGE, Context.MODE_PRIVATE);
+        return sharedPref.getString(ACCESS_STATE, null);
+    }
+
+    public void setState(Context context, String state) {
+        SharedPreferences sharedPref = context.getSharedPreferences(STORAGE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(ACCESS_STATE, state);
         editor.apply();
     }
 
@@ -35,4 +49,15 @@ public class Access implements Serializable {
         return sharedPref.getString(ACCESS_TOKEN, null);
     }
 
+    public void setRefreshToken(Context context, String refreshToken) {
+        SharedPreferences sharedPref = context.getSharedPreferences(STORAGE, Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPref.edit();
+        editor.putString(REFRESH_TOKEN, refreshToken);
+        editor.apply();
+    }
+
+    public String getRefreshToken(Context context) {
+        SharedPreferences sharedPref = context.getSharedPreferences(STORAGE, Context.MODE_PRIVATE);
+        return sharedPref.getString(REFRESH_TOKEN, null);
+    }
 }

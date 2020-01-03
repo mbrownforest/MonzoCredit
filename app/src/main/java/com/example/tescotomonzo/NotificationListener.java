@@ -8,23 +8,32 @@ import org.apache.commons.lang3.StringUtils;
 
 public class NotificationListener extends NotificationListenerService {
 
-    String amexWeekly = "The balance on your Amex Card ending 71009 is £631.99 as of 10/12/2019";
-    String amexString = "The balance on your Amex Card ending 71009 is ";
-
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         MonzoAPI monzoAPI = new MonzoAPI();
+        NotificationBalance balances = new NotificationBalance();
         super.onNotificationPosted(sbn);
         String tickerText = sbn.getNotification().tickerText.toString();
 
-        //change to ticketText but for now use amexWeekly
-        String amexCheck = StringUtils.substring(amexWeekly,0,46);
-        if (amexCheck.equals(amexString)) {
-            Toast.makeText(this, "AMEX balance updating", Toast.LENGTH_LONG).show();
-            Float amexBalance = Float.valueOf(StringUtils.substringBetween(amexWeekly, "£"," "));
-            AmexBalance balances = new AmexBalance();
-            balances.setAmexBalance(this, amexBalance);
-            monzoAPI.checkAccessToken(this);
+        //notification updating the WEEKLY AMEX BALANCE
+        if (tickerText.contains("The balance on your Amex Card ending 71009 is ")) {
+            Toast.makeText(this, "updating weekly Amex balance", Toast.LENGTH_LONG).show();
+            balances.setAmexBalance(this, StringUtils.substringBetween(tickerText, "£"," "));
+            monzoAPI.checkAccessToken(this, 1);
+        }
+
+        //notification updating a SINGLE AMEX CHARGE
+        if (tickerText.contains("with Amex") && tickerText.contains("1009")){
+            Toast.makeText(this, "checking new Amex charge", Toast.LENGTH_LONG).show();
+            balances.setAmexCharge(this, StringUtils.substringBetween(tickerText,"£", " "));
+            monzoAPI.checkAccessToken(this, 2);
+        }
+
+        //notification updating a SINGLE TESCO CHARGE
+        if (tickerText.contains("You'll never miss a Clubcard point again.")){
+            Toast.makeText(this, "checking new Tesco charge", Toast.LENGTH_LONG).show();
+            balances.setTescoCharge(this, StringUtils.substringBetween(tickerText,"£", " "));
+            monzoAPI.checkAccessToken(this, 3);
         }
     }
 

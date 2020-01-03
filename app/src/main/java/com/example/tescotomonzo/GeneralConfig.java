@@ -8,5 +8,5 @@ public class GeneralConfig {
     public static final String LIST_POTS_URL = "https://api.monzo.com/pots";
     public static final String ACCOUNT_URL = "https://api.monzo.com/accounts";
     public static final String BALANCE_URL = "https://api.monzo.com/balance?";
-
+    public static final String DEPOSIT_URL = "https://api.monzo.com/pots/";
 }

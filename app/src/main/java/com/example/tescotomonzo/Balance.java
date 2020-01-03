@@ -12,4 +12,13 @@ public class Balance implements Serializable {
     @JsonProperty("total_balance")
     private Integer totalBalance;
 
+    public Integer getBalance() {
+        return balance;
+    }
+
+    public Integer getTotalBalance() {
+        return totalBalance;
+    }
+
+
 }
