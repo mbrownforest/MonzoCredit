@@ -29,7 +29,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
-    Button tescoLogin;
     Button monzoLogin;
     Permissions permissions = new Permissions();
 
@@ -37,9 +36,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        tescoLogin = (Button) findViewById(R.id.read_texts);
         monzoLogin = (Button) findViewById(R.id.monzo_login);
-        tescoLogin.setOnClickListener(this);
         monzoLogin.setOnClickListener(this);
         permissions.checkForInternetPermission(this, this);
         startService(new Intent(this, NotificationListener.class));
@@ -47,14 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onClick(View v) {
-        switch (v.getId()) {
-            case R.id.monzo_login:
-                startActivity(new Intent(this, MonzoLoginActivity.class));
-                break;
-            case R.id.read_texts:
-                permissions.checkForSmsPermission(this, this);
-                permissions.checkForBroadcastPermission(this, this);
-                break;
+        if (v.getId() == R.id.monzo_login) {
+            startActivity(new Intent(this, MonzoLoginActivity.class));
         }
     }
 
