@@ -5,12 +5,10 @@ import android.service.notification.StatusBarNotification;
 
 public class NotificationListener extends NotificationListenerService {
 
-    private MainActivity mainActivity;
-
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
-        NotificationReader.MyTaskParams myTaskParams = new NotificationReader.MyTaskParams(sbn, this, mainActivity);
+        NotificationReader.MyTaskParams myTaskParams = new NotificationReader.MyTaskParams(sbn, this);
         new NotificationReader().execute(myTaskParams);
     }
 

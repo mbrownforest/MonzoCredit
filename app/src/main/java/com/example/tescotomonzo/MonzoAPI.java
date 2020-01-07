@@ -3,7 +3,6 @@ package com.example.tescotomonzo;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
-import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -63,12 +62,10 @@ public class MonzoAPI {
                     returnRefreshToken = StringUtils.substringBetween(requestAccess, "refresh_token\":\"", "\"");
                     access.setAccessToken(context, token);
                     access.setRefreshToken(context, returnRefreshToken);
-                    Toast.makeText(context, "Open your app to approve Monzo access", Toast.LENGTH_SHORT).show();
                     //add in a list pots
                 },
                 error -> {
                     Log.d("Error.Response", error.toString());
-                    Toast.makeText(context, "Error, something fucked up", Toast.LENGTH_SHORT).show();
                 }
         ) {
             @Override
@@ -108,7 +105,6 @@ public class MonzoAPI {
 
     private void showErrorAndRefreshToken(VolleyError error, Context context) {
         Log.d(error.toString(), "ACCESS TOKEN DENIED");
-        Toast.makeText(context, "Re-requesting access token", Toast.LENGTH_LONG).show();
         String refreshToken = access.getRefreshToken(context);
         if (refreshToken != null) {
             refreshAccessToken(context, refreshToken);
@@ -127,11 +123,8 @@ public class MonzoAPI {
                     access.setRefreshToken(context, returnRefreshToken);
                     listPots(context);
                 },
-                error ->
-                {
-                    Log.d("Error.Response", error.toString());
-                    Toast.makeText(context, "Refresh token unsuccessful", Toast.LENGTH_SHORT).show();
-                }
+                error -> Log.d("Error.Response", error.toString())
+
         ) {
             @Override
             protected Map<String, String> getParams() {
@@ -238,7 +231,7 @@ public class MonzoAPI {
     }
 
     private void checkAmexPot(Context context, String balanceTransferred) {
-        Toast.makeText(context,"The following amount was transferred: " + balanceTransferred, Toast.LENGTH_LONG).show();
+       Log.d("IT WORKED", balanceTransferred);
     }
 
     private void mapAccounts(String account, Context context) {
