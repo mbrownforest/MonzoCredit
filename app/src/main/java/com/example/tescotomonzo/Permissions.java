@@ -12,8 +12,6 @@ import androidx.core.content.ContextCompat;
 public class Permissions {
 
     private static final int MY_PERMISSIONS_INTERNET = 11235;
-    private static final int MY_PERMISSIONS_SMS = 12;
-    private static final int MY_PERMISSIONS_BROADCAST = 3;
 
     public void checkForInternetPermission(Context context, Activity activity) {
         if (ContextCompat.checkSelfPermission(context, Manifest.permission.INTERNET)
@@ -29,24 +27,6 @@ public class Permissions {
 
         }
 
-    }
-
-    public void checkForSmsPermission(Context context, Activity activity) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-            Log.d("Nay permission", Manifest.permission.READ_SMS);
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.READ_SMS},
-                    MY_PERMISSIONS_SMS);
-        }
-    }
-
-    public void checkForBroadcastPermission(Context context, Activity activity) {
-        if (ContextCompat.checkSelfPermission(context, Manifest.permission.BROADCAST_SMS)
-                != PackageManager.PERMISSION_GRANTED) {
-            Log.d("No permission", Manifest.permission.BROADCAST_SMS);
-            ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.BROADCAST_SMS},
-                    MY_PERMISSIONS_BROADCAST);
-        }
     }
 
 }

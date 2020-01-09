@@ -1,6 +1,4 @@
 <resources>
-    <string name="app_name">TescoToMonzo</string>
-    <string name="login_monzo">Login Monzo</string>
-    <string name="login_tesco">Login Tesco</string>
-    <string name="read_text_alerts">Read text alerts</string>
+    <string name="app_name">Monzo Credit</string>
+    <string name="login_monzo">Login to Monzo</string>
 </resources>

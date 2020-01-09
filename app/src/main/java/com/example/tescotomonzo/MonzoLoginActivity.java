@@ -1,5 +1,6 @@
 package com.example.tescotomonzo;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -10,13 +11,11 @@ import java.io.UnsupportedEncodingException;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-import androidx.appcompat.app.AppCompatActivity;
-
 import static com.example.tescotomonzo.AuthConfig.CLIENT_ID;
 import static com.example.tescotomonzo.AuthConfig.REDIRECT_URI;
 import static com.example.tescotomonzo.GeneralConfig.REDIRECT_MONZO;
 
-public class MonzoLoginActivity extends AppCompatActivity {
+public class MonzoLoginActivity extends Activity {
 
     private Map<String, String> params = new LinkedHashMap<>();
     private String redirect_monzo = REDIRECT_MONZO;

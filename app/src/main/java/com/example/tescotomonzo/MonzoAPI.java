@@ -52,6 +52,7 @@ public class MonzoAPI {
     private Map<String, Pots> potsMap = new HashMap<>();
     private List<Account> accountsArray = new ArrayList<>();
     private ObjectMapper mapper = new ObjectMapper();
+    private String dedupeId;
 
     public void requestAccessToken(Context context) {
         String code = access.getCode(context);
@@ -83,9 +84,10 @@ public class MonzoAPI {
         queue.add(postRequest);
     }
 
-    public void checkAccessToken(Context context, int notificationCharge) {
+    void checkAccessToken(Context context, int notificationCharge, String dedupe) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        moneyMovement = notificationCharge;
+        this.moneyMovement = notificationCharge;
+        this.dedupeId = dedupe;
         token = access.getAccessToken(context);
         StringRequest checkRequest = new StringRequest(Request.Method.GET, WHO_AM_I, checkAccess -> {
             String authentication = StringUtils.substringBetween(checkAccess, ":", ",");
@@ -202,12 +204,11 @@ public class MonzoAPI {
 
     }
 
-    private void depositMoneyIntoPot(Context context, String amount, String potId) throws UnsupportedEncodingException {
+    private void depositMoneyIntoPot(Context context, String amount, String potId) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        String dedupeId = RandomStringUtils.random(10, true, true);
         String depositUrl = DEPOSIT_URL + potId + "/deposit";
         StringRequest amexDepositRequest = new StringRequest(Request.Method.PUT, depositUrl,
-                transfer -> checkAmexPot(context, amount),
+                transfer -> checkPotFilled(context, amount, potId),
                 error -> Log.d("ERROR", error.toString())) {
             @Override
             public Map<String, String> getHeaders() {
@@ -226,11 +227,9 @@ public class MonzoAPI {
             }
         };
         queue.add(amexDepositRequest);
-
-
     }
 
-    private void checkAmexPot(Context context, String balanceTransferred) {
+    private void checkPotFilled(Context context, String balanceTransferred, String potId) {
        Log.d("IT WORKED", balanceTransferred);
     }
 
@@ -279,7 +278,7 @@ public class MonzoAPI {
 
     }
 
-    private void checkMovement(Balance balance, Context context) throws UnsupportedEncodingException {
+    private void checkMovement(Balance balance, Context context) {
         String mainAccountBalance = balance.getBalance().toString();
         Float mainAccountBal = Float.valueOf(mainAccountBalance.substring(0, mainAccountBalance.length() - 2) + "." + mainAccountBalance.substring(mainAccountBalance.length() - 2));
         String amexCharge = notificationBalance.getAmexCharge(context);
@@ -304,6 +303,7 @@ public class MonzoAPI {
             case 3: {
                 //TESCO CHARGE
                 if (checkEnoughMoneyInAccount(mainAccountBal, tescoCharge)) {
+                    depositMoneyIntoPot(context, tescoCharge.replace(".",""), Objects.requireNonNull(potsMap.get("Tesco Credit Card")).id);
                 }
                 break;
             }

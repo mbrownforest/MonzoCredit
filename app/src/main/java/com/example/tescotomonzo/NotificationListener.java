@@ -8,14 +8,19 @@ public class NotificationListener extends NotificationListenerService {
     @Override
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
-        NotificationReader.MyTaskParams myTaskParams = new NotificationReader.MyTaskParams(sbn, this);
-        new NotificationReader().execute(myTaskParams);
+        NotificationReaderService.MyTaskParams myTaskParams = new NotificationReaderService.MyTaskParams(sbn, this);
+        new NotificationReaderService().execute(myTaskParams);
     }
 
     @Override
     public void onNotificationRemoved(StatusBarNotification sbn) {
         super.onNotificationRemoved(sbn);
         sbn.getKey();
+    }
+
+    @Override
+    public StatusBarNotification[] getActiveNotifications() {
+        return new StatusBarNotification[]{};
     }
 
 }
