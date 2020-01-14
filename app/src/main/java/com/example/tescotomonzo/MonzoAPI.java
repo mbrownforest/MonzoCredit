@@ -3,44 +3,26 @@ package com.example.tescotomonzo;
 import android.content.Context;
 import android.os.Build;
 import android.util.Log;
-
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedHashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
 
-import static com.example.tescotomonzo.AuthConfig.CLIENT_ID;
-import static com.example.tescotomonzo.AuthConfig.CLIENT_SECRET;
-import static com.example.tescotomonzo.AuthConfig.REDIRECT_URI;
-import static com.example.tescotomonzo.GeneralConfig.ACCESS_TOKEN_URL;
-import static com.example.tescotomonzo.GeneralConfig.ACCOUNT_URL;
-import static com.example.tescotomonzo.GeneralConfig.BALANCE_URL;
-import static com.example.tescotomonzo.GeneralConfig.DEPOSIT_URL;
-import static com.example.tescotomonzo.GeneralConfig.LIST_POTS_URL;
-import static com.example.tescotomonzo.GeneralConfig.WHO_AM_I;
+import static com.example.tescotomonzo.AuthConfig.*;
+import static com.example.tescotomonzo.GeneralConfig.*;
 
 public class MonzoAPI {
 
     //https://stackoverflow.com/questions/28172496/android-volley-how-to-isolate-requests-in-another-class/30604191
-    //turn pots array into hashmap
-    //add in for tesco etc
     //put in catch for no internet
 
     private String token;
@@ -54,34 +36,23 @@ public class MonzoAPI {
     private ObjectMapper mapper = new ObjectMapper();
     private String dedupeId;
 
+
     public void requestAccessToken(Context context) {
         String code = access.getCode(context);
-        RequestQueue queue = Volley.newRequestQueue(context);
-        StringRequest postRequest = new StringRequest(Request.Method.POST, ACCESS_TOKEN_URL,
-                requestAccess -> {
-                    token = StringUtils.substringBetween(requestAccess, "access_token\":\"", "\"");
-                    returnRefreshToken = StringUtils.substringBetween(requestAccess, "refresh_token\":\"", "\"");
-                    access.setAccessToken(context, token);
-                    access.setRefreshToken(context, returnRefreshToken);
-                    //add in a list pots
-                },
-                error -> {
-                    Log.d("Error.Response", error.toString());
-                }
-        ) {
-            @Override
-            protected Map<String, String> getParams() {
-                Map<String, String> params = new LinkedHashMap<>();
-                params.put("grant_type", "authorization_code");
-                params.put("client_id", CLIENT_ID);
-                params.put("client_secret", CLIENT_SECRET);
-                params.put("redirect_uri", REDIRECT_URI);
-                params.put("code", code);
-
-                return params;
+        Map<String, String> params = new HashMap<>();
+        params.put("grant_type", "authorization_code");
+        params.put("client_id", CLIENT_ID);
+        params.put("client_secret", CLIENT_SECRET);
+        params.put("redirect_uri", REDIRECT_URI);
+        params.put("code", code);
+        RequestManager.getInstance().postRequest(ACCESS_TOKEN_URL, params, result -> {
+            if (!result.isEmpty()) {
+                token = StringUtils.substringBetween(result, "access_token\":\"", "\"");
+                returnRefreshToken = StringUtils.substringBetween(result, "refresh_token\":\"", "\"");
+                access.setAccessToken(context, token);
+                access.setRefreshToken(context, returnRefreshToken);
             }
-        };
-        queue.add(postRequest);
+        });
     }
 
     void checkAccessToken(Context context, int notificationCharge, String dedupe) {
@@ -230,7 +201,7 @@ public class MonzoAPI {
     }
 
     private void checkPotFilled(Context context, String balanceTransferred, String potId) {
-       Log.d("IT WORKED", balanceTransferred);
+        Log.d("IT WORKED", balanceTransferred);
     }
 
     private void mapAccounts(String account, Context context) {
@@ -303,7 +274,7 @@ public class MonzoAPI {
             case 3: {
                 //TESCO CHARGE
                 if (checkEnoughMoneyInAccount(mainAccountBal, tescoCharge)) {
-                    depositMoneyIntoPot(context, tescoCharge.replace(".",""), Objects.requireNonNull(potsMap.get("Tesco Credit Card")).id);
+                    depositMoneyIntoPot(context, tescoCharge.replace(".", ""), Objects.requireNonNull(potsMap.get("Tesco Credit Card")).id);
                 }
                 break;
             }
@@ -318,7 +289,6 @@ public class MonzoAPI {
     private boolean checkAmexBalanceEqual(Context context, Float mainAccountBal) {
         return false;
     }
-
 
 
 }
