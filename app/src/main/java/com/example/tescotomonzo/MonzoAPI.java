@@ -11,14 +11,12 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
-import org.apache.commons.lang3.RandomStringUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedHashMap;
@@ -36,12 +34,7 @@ import static com.example.tescotomonzo.GeneralConfig.DEPOSIT_URL;
 import static com.example.tescotomonzo.GeneralConfig.LIST_POTS_URL;
 import static com.example.tescotomonzo.GeneralConfig.WHO_AM_I;
 
-public class MonzoAPI {
-
-    //https://stackoverflow.com/questions/28172496/android-volley-how-to-isolate-requests-in-another-class/30604191
-    //turn pots array into hashmap
-    //add in for tesco etc
-    //put in catch for no internet
+class MonzoAPI {
 
     private String token;
     private String returnRefreshToken;
@@ -54,7 +47,7 @@ public class MonzoAPI {
     private ObjectMapper mapper = new ObjectMapper();
     private String dedupeId;
 
-    public void requestAccessToken(Context context) {
+    void requestAccessToken(Context context) {
         String code = access.getCode(context);
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest postRequest = new StringRequest(Request.Method.POST, ACCESS_TOKEN_URL,
@@ -63,12 +56,8 @@ public class MonzoAPI {
                     returnRefreshToken = StringUtils.substringBetween(requestAccess, "refresh_token\":\"", "\"");
                     access.setAccessToken(context, token);
                     access.setRefreshToken(context, returnRefreshToken);
-                    //add in a list pots
                 },
-                error -> {
-                    Log.d("Error.Response", error.toString());
-                }
-        ) {
+                error -> Log.d("Error.Response", error.toString())) {
             @Override
             protected Map<String, String> getParams() {
                 Map<String, String> params = new LinkedHashMap<>();
@@ -230,7 +219,7 @@ public class MonzoAPI {
     }
 
     private void checkPotFilled(Context context, String balanceTransferred, String potId) {
-       Log.d("IT WORKED", balanceTransferred);
+        Log.d("IT WORKED", balanceTransferred);
     }
 
     private void mapAccounts(String account, Context context) {
@@ -283,16 +272,7 @@ public class MonzoAPI {
         Float mainAccountBal = Float.valueOf(mainAccountBalance.substring(0, mainAccountBalance.length() - 2) + "." + mainAccountBalance.substring(mainAccountBalance.length() - 2));
         String amexCharge = notificationBalance.getAmexCharge(context);
         String tescoCharge = notificationBalance.getTescoCharge(context);
-        String amexBalanceDifference = null;
         switch (moneyMovement) {
-            case 1: {
-                //AMEX BALANCE
-                if (checkAmexBalanceEqual(context, mainAccountBal)) {
-                    //this is where your pot name matters
-                    depositMoneyIntoPot(context, amexBalanceDifference, Objects.requireNonNull(potsMap.get("AMEX")).id);
-                }
-                break;
-            }
             case 2: {
                 //AMEX CHARGE
                 if (checkEnoughMoneyInAccount(mainAccountBal, amexCharge)) {
@@ -303,7 +283,7 @@ public class MonzoAPI {
             case 3: {
                 //TESCO CHARGE
                 if (checkEnoughMoneyInAccount(mainAccountBal, tescoCharge)) {
-                    depositMoneyIntoPot(context, tescoCharge.replace(".",""), Objects.requireNonNull(potsMap.get("Tesco Credit Card")).id);
+                    depositMoneyIntoPot(context, tescoCharge.replace(".", ""), Objects.requireNonNull(potsMap.get("Tesco Credit Card")).id);
                 }
                 break;
             }
@@ -313,12 +293,5 @@ public class MonzoAPI {
     private boolean checkEnoughMoneyInAccount(Float mainAccountBal, String charge) {
         return mainAccountBal >= Float.parseFloat(charge);
     }
-
-
-    private boolean checkAmexBalanceEqual(Context context, Float mainAccountBal) {
-        return false;
-    }
-
-
 
 }

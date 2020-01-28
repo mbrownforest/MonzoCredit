@@ -18,7 +18,6 @@ public class MainActivity extends Activity implements View.OnClickListener {
         monzoLogin = (Button) findViewById(R.id.monzo_login);
         monzoLogin.setOnClickListener(this);
         permissions.checkForInternetPermission(this, this);
-        //     this.registerReceiver(new UserPresentReceiver(), new IntentFilter(ACTION_USER_PRESENT));
         startService(new Intent(this, NotificationListener.class));
     }
 

@@ -29,11 +29,6 @@ public class NotificationReaderService extends AsyncTask<NotificationReaderServi
 
     protected void onPostExecute(String tickerText) {
         String dedupeId = RandomStringUtils.random(10, true, true);
-        //notification updating the WEEKLY AMEX BALANCE
-        if (tickerText.contains("The balance on your Amex Card ending 71009 is ")) {
-            balances.setAmexBalance(notificationContext, StringUtils.substringBetween(tickerText, "£", " "));
-            monzoAPI.checkAccessToken(notificationContext, 1, dedupeId);
-        }
 
         //notification updating a SINGLE AMEX CHARGE
         if (tickerText.contains("with Amex") && tickerText.contains("1009")) {
