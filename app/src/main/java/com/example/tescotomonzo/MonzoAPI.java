@@ -186,7 +186,6 @@ class MonzoAPI {
             if (balance != null) {
                 checkMovement(balance, context);
             }
-
         } catch (IOException | JSONException e) {
             e.printStackTrace();
         }

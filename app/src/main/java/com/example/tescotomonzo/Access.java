@@ -7,7 +7,7 @@ import java.io.Serializable;
 
 class Access implements Serializable {
 
-    private static final String STORAGE = "AuthData";
+    private static final String STORAGE = "AccessData";
     private static final String ACCESS_CODE = "access_code";
     private static final String ACCESS_TOKEN = "access_token";
     private static final String ACCESS_STATE = "access_state";

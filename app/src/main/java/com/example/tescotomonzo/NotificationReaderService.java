@@ -19,8 +19,6 @@ public class NotificationReaderService extends AsyncTask<NotificationReaderServi
     protected String doInBackground(MyTaskParams... myTaskParams) {
         notificationContext = myTaskParams[0].context;
         String ticker = myTaskParams[0].sbn.getNotification().extras.getString("android.text");
-//        String tText = myTaskParams[0].sbn.getNotification().tickerText.toString();
-        //TODO add in tText checks for Google Pay and Tesco Pay
         if (ticker != null) {
             return ticker;
         }
@@ -29,18 +27,13 @@ public class NotificationReaderService extends AsyncTask<NotificationReaderServi
 
     protected void onPostExecute(String tickerText) {
         String dedupeId = RandomStringUtils.random(10, true, true);
+        UserCreditValues userCreditValues = new UserCreditValues();
+        userCreditValues.getCreditCardNotification(notificationContext);
 
-        //notification updating a SINGLE AMEX CHARGE
         if (tickerText.contains("with Amex") && tickerText.contains("1009")) {
             Log.d("Read notification", tickerText);
             balances.setAmexCharge(notificationContext, StringUtils.substringBetween(tickerText, "£", " "));
             monzoAPI.checkAccessToken(notificationContext, 2, dedupeId);
-        }
-
-        //notification updating a SINGLE TESCO CHARGE
-        if (tickerText.contains("You'll never miss a Clubcard point again.")) {
-            balances.setTescoCharge(notificationContext, StringUtils.substringBetween(tickerText, "£", " "));
-            monzoAPI.checkAccessToken(notificationContext, 3, dedupeId);
         }
     }
 
