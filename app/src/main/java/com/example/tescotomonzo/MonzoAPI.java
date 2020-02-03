@@ -39,7 +39,6 @@ class MonzoAPI {
     private String token;
     private String returnRefreshToken;
     private String accountId;
-    private int moneyMovement;
     private Access access = new Access();
     private NotificationBalance notificationBalance = new NotificationBalance();
     private Map<String, Pots> potsMap = new HashMap<>();
@@ -73,9 +72,8 @@ class MonzoAPI {
         queue.add(postRequest);
     }
 
-    void checkAccessToken(Context context, int notificationCharge, String dedupe) {
+    void checkAccessToken(Context context, String dedupe) {
         RequestQueue queue = Volley.newRequestQueue(context);
-        this.moneyMovement = notificationCharge;
         this.dedupeId = dedupe;
         token = access.getAccessToken(context);
         StringRequest checkRequest = new StringRequest(Request.Method.GET, WHO_AM_I, checkAccess -> {
@@ -95,7 +93,6 @@ class MonzoAPI {
     }
 
     private void showErrorAndRefreshToken(VolleyError error, Context context) {
-        Log.d(error.toString(), "ACCESS TOKEN DENIED");
         String refreshToken = access.getRefreshToken(context);
         if (refreshToken != null) {
             refreshAccessToken(context, refreshToken);
@@ -267,26 +264,16 @@ class MonzoAPI {
     }
 
     private void checkMovement(Balance balance, Context context) {
+        UserCreditValues userCreditValues = new UserCreditValues();
         String mainAccountBalance = balance.getBalance().toString();
         Float mainAccountBal = Float.valueOf(mainAccountBalance.substring(0, mainAccountBalance.length() - 2) + "." + mainAccountBalance.substring(mainAccountBalance.length() - 2));
         String amexCharge = notificationBalance.getAmexCharge(context);
-        String tescoCharge = notificationBalance.getTescoCharge(context);
-        switch (moneyMovement) {
-            case 2: {
-                //AMEX CHARGE
-                if (checkEnoughMoneyInAccount(mainAccountBal, amexCharge)) {
-                    depositMoneyIntoPot(context, amexCharge.replace(".", ""), Objects.requireNonNull(potsMap.get("AMEX")).id);
-                }
-                break;
-            }
-            case 3: {
-                //TESCO CHARGE
-                if (checkEnoughMoneyInAccount(mainAccountBal, tescoCharge)) {
-                    depositMoneyIntoPot(context, tescoCharge.replace(".", ""), Objects.requireNonNull(potsMap.get("Tesco Credit Card")).id);
-                }
-                break;
-            }
+        String monzoPotName = userCreditValues.getMonzoPotName(context);
+
+        if (checkEnoughMoneyInAccount(mainAccountBal, amexCharge)) {
+            depositMoneyIntoPot(context, amexCharge.replace(".", ""), Objects.requireNonNull(potsMap.get(monzoPotName)).id);
         }
+
     }
 
     private boolean checkEnoughMoneyInAccount(Float mainAccountBal, String charge) {

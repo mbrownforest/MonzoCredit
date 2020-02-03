@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.EditText;
 
 public class MainActivity extends Activity implements View.OnClickListener {
 
     Button monzoLogin;
     Button monzoAddPot;
+    Button monzoViewPots;
     Permissions permissions = new Permissions();
 
     @Override
@@ -19,8 +19,10 @@ public class MainActivity extends Activity implements View.OnClickListener {
         setContentView(R.layout.activity_main);
         monzoLogin = (Button) findViewById(R.id.monzo_login);
         monzoAddPot = (Button) findViewById(R.id.monzo_pot);
+        monzoViewPots = (Button) findViewById(R.id.monzo_pots);
         monzoLogin.setOnClickListener(this);
         monzoAddPot.setOnClickListener(this);
+        monzoViewPots.setOnClickListener(this);
         permissions.checkForInternetPermission(this, this);
         startService(new Intent(this, NotificationListener.class));
     }
@@ -33,6 +35,9 @@ public class MainActivity extends Activity implements View.OnClickListener {
             }
             case R.id.monzo_pot: {
                 startActivity(new Intent(this, MonzoPotManagerActivity.class));
+            }
+            case R.id.monzo_pots: {
+                startActivity(new Intent(this, MonzoViewPotsActivity.class));
             }
         }
     }
