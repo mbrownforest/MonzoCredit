@@ -1,9 +1,12 @@
 <resources>
     <string name="app_name">Monzo Credit</string>
-    <string name="login_monzo">LOGIN TO MONZO</string>
-    <string name="add_a_pot">ADD A POT</string>
+    <string name="login_monzo">Login to Monzo</string>
+    <string name="add_a_pot">Add a pot</string>
     <string name="what_is_the_name_of_your_monzo_pot">Please type below the name of your Monzo Pot.</string>
     <string name="what_is_the_verbatim_text_in_the_notification">Please type out below the exact text of your credit card notification including the price shown. For example, £33.99 spent today at American Express.</string>
     <string name="save">Save</string>
-    <string name="view_pots">VIEW POTS</string>
+    <string name="view_pots">View your pots</string>
+    <string name="accept">Accept</string>
+    <string name="decline">Start again</string>
+    <string name="main_menu">back to Main Menu</string>
 </resources>

@@ -9,11 +9,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 
 public class MonzoViewPotsActivity extends Activity {
 
+    private static final String NO_POTS = "You do not have any Monzo pots";
     TextView monzoPot;
     Button deletePot;
     Context context;
-    Button back;
-
+    Button mainMenu;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -24,6 +24,9 @@ public class MonzoViewPotsActivity extends Activity {
 
         monzoPot = (TextView) findViewById(R.id.monzo_view_pot);
         deletePot = (Button) findViewById(R.id.delete_pot);
+        mainMenu = (Button) findViewById(R.id.return_main_menu);
+
+        mainMenu.setOnClickListener(v -> finish());
 
         ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.view_pots_layout);
         layout.removeView(deletePot);
@@ -35,9 +38,11 @@ public class MonzoViewPotsActivity extends Activity {
             deletePot.setOnClickListener(v -> {
                 userCreditValues.setMonzoPotName(context, null);
                 userCreditValues.setCreditCardNotification(context, null);
+                layout.removeView(deletePot);
+                monzoPot.setText(NO_POTS);
             });
         } else {
-            monzoPot.setText("You do not have any Monzo pots");
+            monzoPot.setText(NO_POTS);
         }
 
     }

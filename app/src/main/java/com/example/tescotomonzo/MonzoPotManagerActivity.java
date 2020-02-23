@@ -40,5 +40,6 @@ public class MonzoPotManagerActivity extends Activity implements View.OnClickLis
         String creditCardNotification = StringUtils.remove(creditCardInput, "£" + moneyAmount);
         userCreditValues.setCreditCardNotification(this, creditCardNotification);
         startActivity(new Intent(this, MonzoSavedNewPotActivity.class));
+        finish();
     }
 }
