@@ -3,50 +3,47 @@ package com.example.tescotomonzo;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
-public class MonzoSavedNewPotActivity extends Activity implements View.OnClickListener {
+import org.apache.commons.lang3.StringUtils;
 
-    TextView savedMonzoPot;
-    TextView savedCreditCardNotification;
-
-    Button accept;
-    Button decline;
-
-    UserCreditValues userCreditValues = new UserCreditValues();
+public class MonzoSavedNewPotActivity extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.saved_new_pot);
-        savedMonzoPot = (TextView) findViewById(R.id.monzo_saved_pot_name);
-        savedCreditCardNotification = (TextView) findViewById(R.id.monzo_saved_credit_card_notification);
 
-        accept = (Button) findViewById(R.id.accept_pot);
-        decline = (Button) findViewById(R.id.decline_pot);
+        TextView savedMonzoPot = findViewById(R.id.monzo_saved_pot_name);
+        TextView savedCreditCardNotification = findViewById(R.id.monzo_saved_credit_card_notification);
 
-        accept.setOnClickListener(this);
-        decline.setOnClickListener(this);
+        Button accept = findViewById(R.id.accept_pot);
+        Button decline = findViewById(R.id.decline_pot);
 
-        savedMonzoPot.setText("New Monzo Pot: " + userCreditValues.getMonzoPotName(this));
-        savedCreditCardNotification.setText("New Monzo Notification: \"" + userCreditValues.getCreditCardNotification(this) + "\"");
-    }
+        UserCreditValues userCreditValues = new UserCreditValues();
 
+        Bundle potBundle = getIntent().getExtras();
+        if (potBundle != null) {
+            String creditCardInput = potBundle.getString("creditCardInput");
+            String monzoPotName = potBundle.getString("monzoPotName");
 
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()) {
-            case (R.id.accept_pot):
+            savedMonzoPot.setText("New Monzo Pot: " + monzoPotName);
+            savedCreditCardNotification.setText("New Monzo Notification: \"" + creditCardInput + "\"");
+
+            accept.setOnClickListener(v -> {
+                userCreditValues.setMonzoPotName(this, monzoPotName);
+                String moneyAmount = StringUtils.substringBetween(creditCardInput, "£", " ");
+                String creditCardNotification = StringUtils.remove(creditCardInput, "£" + moneyAmount);
+                userCreditValues.setCreditCardNotification(this, creditCardNotification);
                 finish();
-                break;
-            case (R.id.decline_pot):
+            });
+            decline.setOnClickListener(v -> {
                 userCreditValues.setCreditCardNotification(this, null);
                 userCreditValues.setMonzoPotName(this, null);
                 startActivity(new Intent(this, MonzoPotManagerActivity.class));
-                break;
+            });
         }
-
     }
+
 }

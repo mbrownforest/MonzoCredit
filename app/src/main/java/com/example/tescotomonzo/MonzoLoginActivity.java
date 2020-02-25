@@ -42,7 +42,7 @@ public class MonzoLoginActivity extends Activity {
                 new Intent("android.intent.action.VIEW",
                         Uri.parse(redirect_monzo));
         startActivity(viewIntent);
-
+        finish();
     }
 
     private String getRandomState() {
