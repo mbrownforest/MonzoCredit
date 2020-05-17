@@ -34,7 +34,7 @@ public class NotificationReaderService extends AsyncTask<NotificationReaderServi
         String dedupeId = RandomStringUtils.random(10, true, true);
         String creditCardNotification = userCreditValues.getCreditCardNotification(notificationContext);
 
-        if (tickerText.contains(creditCardNotification)) {
+        if (creditCardNotification != null && tickerText.contains(creditCardNotification)) {
             balances.setAmexCharge(notificationContext, StringUtils.substringBetween(tickerText, "£", " "));
             monzoAPI.checkAccessToken(notificationContext, dedupeId);
         }

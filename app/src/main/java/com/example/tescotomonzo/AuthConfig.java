@@ -9,7 +9,7 @@ import static android.Manifest.permission_group.STORAGE;
 
 class AuthConfig implements Serializable {
 
-   static final String REDIRECT_URI = "https://tescotomonzo.example.com/oauth/callback/";
+   static final String REDIRECT_URI = "https://monzocredit.example.com/oauth/callback/";
    private static final String CLIENT_ID = "client_id";
    private static final String CLIENT_SECRET = "client_secret";
 
