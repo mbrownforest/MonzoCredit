@@ -3,10 +3,17 @@
     <string name="login_monzo">Login to Monzo</string>
     <string name="add_a_pot">Add a pot</string>
     <string name="what_is_the_name_of_your_monzo_pot">Please type below the name of your Monzo Pot.</string>
-    <string name="what_is_the_verbatim_text_in_the_notification">Please type out below the exact text of your credit card notification including the price shown. For example, £33.99 spent today at American Express.</string>
+    <string name="verbatim_text_in_the_notification">Please type out below the exact text of your credit card notification including the price but excluding special characters. For example, if your notification reads \"£33.99 spent today on American Express ****1234\" then input \"£33.99 spent today on American Express 1234\"</string>
     <string name="save">Save</string>
     <string name="view_pots">View your pots</string>
     <string name="accept">Accept</string>
     <string name="decline">Start again</string>
     <string name="main_menu">back to Main Menu</string>
+    <string name="add_your_redirect_uri">You need to add the below url as your redirect uri</string>
+    <string name="redirect_uri">https://tescotomonzo.example.com/oauth/callback/</string>
+    <string name="client_id">Client Id</string>
+    <string name="client_secret">Client Secret</string>
+    <string name="monzo_login_text">To access the Monzo api via this app you need to setup an OAuth client. Go to <a href="https://developers.monzo.com">Monzo Developer Portal</a> , setup a new OAuth client and then input the following details below (you will need to set your redirect uri to the url below). You will also need to set the auth to public so you can get a refresh access token. Once the details have been input select login and it will redirect you to the monzo developer login again. This will trigger another email, you should open the link in the email on your phone and select to open in this app, this will complete the setup.</string>
+    <string name="return_login">back to Login</string>
+    <string name="monzo_setup_details">Monzo setup instructions</string>
 </resources>

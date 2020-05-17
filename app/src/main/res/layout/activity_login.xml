@@ -2,50 +2,65 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/monzo_pot_name_label"
+    <Button
+        android:id="@+id/monzo_setup_details"
+        style="@style/AudioFileInfoOverlayText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:text="@string/what_is_the_name_of_your_monzo_pot"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
-        android:lineSpacingExtra="5dp"
-        app:layout_constraintBottom_toTopOf="@id/monzo_pot_name"
+        android:background="#000000"
+        android:text="@string/monzo_setup_details"
+        android:textColor="#FFFFFF"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        />
-    <EditText
-        android:id="@+id/monzo_pot_name"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/client_id_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
+        android:layout_marginBottom="20dp"
+        android:paddingStart="10dp"
+        android:paddingEnd="10dp"
+        android:text="@string/client_id"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/monzo_setup_details" />
+
+    <EditText
+        android:id="@+id/client_id"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:autofillHints="American Express Pot"
         android:paddingStart="10dp"
         android:paddingEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/monzo_pot_name_label"
-        android:autofillHints="American Express Pot"
+        app:layout_constraintTop_toBottomOf="@id/client_id_label"
         tools:targetApi="o" />
 
     <TextView
-        android:id="@+id/monzo_pot_notif_label"
+        android:id="@+id/client_secret_label"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
-        android:lineSpacingExtra="5dp"
         android:paddingStart="10dp"
-        android:text="@string/verbatim_text_in_the_notification"
         android:paddingEnd="10dp"
+        android:text="@string/client_secret"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/monzo_pot_name"
-        />
+        app:layout_constraintTop_toBottomOf="@id/client_id" />
+
     <EditText
-        android:id="@+id/monzo_pot_notif"
+        android:id="@+id/client_secret"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="20dp"
@@ -53,25 +68,23 @@
         android:paddingEnd="10dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/monzo_pot_notif_label"
-        android:autofillHints="£33.49 with Amex **** 1111"
-        />
+        app:layout_constraintTop_toBottomOf="@id/client_secret_label" />
+
     <Button
-        android:id="@+id/save_new_pot"
+        android:id="@+id/monzo_login_go"
+        style="@style/AudioFileInfoOverlayText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="20dp"
+        android:layout_marginEnd="20dp"
         android:layout_marginBottom="20dp"
-        android:text="@string/save"
         android:background="#000000"
+        android:text="@string/login_monzo"
         android:textColor="#FFFFFF"
-        style="@style/AudioFileInfoOverlayText"
-        android:paddingStart="10dp"
-        android:paddingEnd="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/monzo_pot_notif"
-        />
+        app:layout_constraintTop_toBottomOf="@id/client_secret" />
 
     <Button
         android:id="@+id/return_main_menu"
@@ -88,6 +101,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/save_new_pot" />
+        app:layout_constraintTop_toBottomOf="@id/monzo_login_go" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

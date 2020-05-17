@@ -9,10 +9,17 @@ import org.apache.commons.lang3.StringUtils;
 
 public class NotificationReaderService extends AsyncTask<NotificationReaderService.MyTaskParams, Context, String> {
 
-    private static final String WRONG_NOTIFICATION = "Not credit or empty notification";
-    private MonzoAPI monzoAPI = new MonzoAPI();
-    private NotificationBalance balances = new NotificationBalance();
-    private Context notificationContext;
+    private static final String WRONG_NOTIFICATION = "Null or not a monetary notification";
+    Context notificationContext;
+    private MonzoAPI monzoAPI;
+    private NotificationBalance balances;
+    private UserCreditValues userCreditValues;
+
+    NotificationReaderService(UserCreditValues userCreditValues, NotificationBalance balances, MonzoAPI monzoAPI) {
+        this.userCreditValues = userCreditValues;
+        this.balances = balances;
+        this.monzoAPI = monzoAPI;
+    }
 
     protected String doInBackground(MyTaskParams... myTaskParams) {
         notificationContext = myTaskParams[0].context;
@@ -25,7 +32,6 @@ public class NotificationReaderService extends AsyncTask<NotificationReaderServi
 
     protected void onPostExecute(String tickerText) {
         String dedupeId = RandomStringUtils.random(10, true, true);
-        UserCreditValues userCreditValues = new UserCreditValues();
         String creditCardNotification = userCreditValues.getCreditCardNotification(notificationContext);
 
         if (tickerText.contains(creditCardNotification)) {
@@ -34,7 +40,7 @@ public class NotificationReaderService extends AsyncTask<NotificationReaderServi
         }
     }
 
-    static class MyTaskParams {
+    public static class MyTaskParams {
         StatusBarNotification sbn;
         Context context;
 

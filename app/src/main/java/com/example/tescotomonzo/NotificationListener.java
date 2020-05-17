@@ -9,7 +9,7 @@ public class NotificationListener extends NotificationListenerService {
     public void onNotificationPosted(StatusBarNotification sbn) {
         super.onNotificationPosted(sbn);
         NotificationReaderService.MyTaskParams myTaskParams = new NotificationReaderService.MyTaskParams(sbn, this);
-        new NotificationReaderService().execute(myTaskParams);
+        new NotificationReaderService(new UserCreditValues(), new NotificationBalance(), new MonzoAPI()).execute(myTaskParams);
     }
 
     @Override

@@ -24,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.example.tescotomonzo.AuthConfig.CLIENT_ID;
-import static com.example.tescotomonzo.AuthConfig.CLIENT_SECRET;
 import static com.example.tescotomonzo.AuthConfig.REDIRECT_URI;
 import static com.example.tescotomonzo.GeneralConfig.ACCESS_TOKEN_URL;
 import static com.example.tescotomonzo.GeneralConfig.ACCOUNT_URL;
@@ -34,7 +32,7 @@ import static com.example.tescotomonzo.GeneralConfig.DEPOSIT_URL;
 import static com.example.tescotomonzo.GeneralConfig.LIST_POTS_URL;
 import static com.example.tescotomonzo.GeneralConfig.WHO_AM_I;
 
-class MonzoAPI {
+public class MonzoAPI {
 
     private String token;
     private String returnRefreshToken;
@@ -47,6 +45,7 @@ class MonzoAPI {
     private String dedupeId;
 
     void requestAccessToken(Context context) {
+        AuthConfig authConfig = new AuthConfig();
         String code = access.getCode(context);
         RequestQueue queue = Volley.newRequestQueue(context);
         StringRequest postRequest = new StringRequest(Request.Method.POST, ACCESS_TOKEN_URL,
@@ -61,8 +60,8 @@ class MonzoAPI {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new LinkedHashMap<>();
                 params.put("grant_type", "authorization_code");
-                params.put("client_id", CLIENT_ID);
-                params.put("client_secret", CLIENT_SECRET);
+                params.put("client_id", authConfig.getClientId(context));
+                params.put("client_secret", authConfig.getClientSecret(context));
                 params.put("redirect_uri", REDIRECT_URI);
                 params.put("code", code);
 
@@ -103,6 +102,7 @@ class MonzoAPI {
 
     private void refreshAccessToken(Context context, String refreshToken) {
         RequestQueue queue = Volley.newRequestQueue(context);
+        AuthConfig authConfig = new AuthConfig();
         StringRequest refreshRequest = new StringRequest(Request.Method.POST, ACCESS_TOKEN_URL,
                 requestAccess -> {
                     token = StringUtils.substringBetween(requestAccess, "access_token\":\"", "\"");
@@ -118,8 +118,8 @@ class MonzoAPI {
             protected Map<String, String> getParams() {
                 Map<String, String> params = new LinkedHashMap<>();
                 params.put("grant_type", "refresh_token");
-                params.put("client_id", CLIENT_ID);
-                params.put("client_secret", CLIENT_SECRET);
+                params.put("client_id", authConfig.getClientId(context));
+                params.put("client_secret", authConfig.getClientSecret(context));
                 params.put("refresh_token", refreshToken);
 
                 return params;

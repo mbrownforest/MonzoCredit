@@ -37,6 +37,7 @@
         <activity android:name=".MonzoPotManagerActivity"></activity>
         <activity android:name=".MonzoSavedNewPotActivity"></activity>
         <activity android:name=".MonzoViewPotsActivity"></activity>
+        <activity android:name=".SetupActivity"></activity>
 
         <service
             android:name=".NotificationListener"
