@@ -27,7 +27,7 @@
             android:theme="@style/AppTheme">
             <intent-filter>
                 <data
-                    android:host="tescotomonzo.example.com"
+                    android:host="monzocredit.example.com"
                     android:scheme="https" />
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
